@@ -1,0 +1,417 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Teste 2 Robótica I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: exam terminal — slim status bar, one question per screen, navigator grid below */
+:root{
+  --bg:#f3f5f7; --panel:#ffffff; --ink:#18212b; --muted:#5b6876; --line:#d5dce3;
+  --accent:#1f5f8b; --accent-ink:#ffffff; --amber:#c27a00; --ok:#1d7a46; --bad:#b3261e; --chip:#e7edf3;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --panel:#18202a; --ink:#e6ebf0; --muted:#97a4b2; --line:#2c3743;
+  --accent:#5aa5d8; --accent-ink:#0b1218; --amber:#e8a73a; --ok:#4cc386; --bad:#ef6b62; --chip:#222c37; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --panel:#18202a; --ink:#e6ebf0; --muted:#97a4b2; --line:#2c3743;
+  --accent:#5aa5d8; --accent-ink:#0b1218; --amber:#e8a73a; --ok:#4cc386; --bad:#ef6b62; --chip:#222c37; color-scheme:dark}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:flex;flex-direction:column;gap:20px}
+h1,h2{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:2.3rem} h2{font-size:1.6rem}
+.eyebrow{font-family:var(--f-display);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:.85rem;color:var(--amber)}
+p{margin:0}
+.muted{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.rules{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:.95rem}
+input[type=text],input[type=password],select{font:inherit;font-weight:400;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);min-width:0}
+input:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:10px 18px;border-radius:6px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.link{background:none;border:0;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0;align-self:flex-start}
+.err{color:var(--bad);font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.spacer{flex:1}
+
+/* exam bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:var(--bg);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.95rem}
+.bar .who{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timer{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:1.05rem;padding:2px 10px;border-radius:4px;background:color-mix(in srgb,var(--bg) 14%,transparent)}
+.timer.low{background:var(--bad);color:#fff}
+.prog{font-variant-numeric:tabular-nums}
+.qhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qnum{font-family:var(--f-display);font-size:1.25rem;font-weight:700;color:var(--accent)}
+.tag{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;background:var(--chip);color:var(--muted);padding:2px 8px;border-radius:3px}
+.stem{font-size:1.12rem}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:6px;padding:12px 14px;cursor:pointer;background:var(--bg)}
+.opt input{margin-top:5px;accent-color:var(--accent)}
+.opt .k{font-family:var(--f-mono);color:var(--muted)}
+.opt:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--bg))}
+.opt:has(input:checked) .k{color:var(--accent)}
+.vf{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vf .opt{justify-content:center;font-weight:600}
+.nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
+.nav button{font-family:var(--f-mono);font-size:.85rem;padding:8px 0;border-radius:4px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer}
+.nav button.done{background:var(--chip);color:var(--ink);border-color:var(--muted)}
+.nav button.cur{outline:2px solid var(--accent);outline-offset:1px;color:var(--accent)}
+.navlabel{font-size:.85rem;color:var(--muted)}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 55%,transparent);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.overlay .panel{max-width:440px;width:100%}
+
+/* result */
+.score{font-family:var(--f-display);font-size:4.2rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.score small{font-size:1.6rem;color:var(--muted)}
+.status{display:inline-block;font-weight:700;padding:4px 12px;border-radius:4px;font-size:.95rem}
+.status.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.status.bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+dl.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+dl.kv dt{color:var(--muted)} dl.kv dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.code{font-family:var(--f-mono);font-size:1.6rem;letter-spacing:.18em;color:var(--accent)}
+.verdict{font-weight:700;padding:10px 14px;border-radius:6px}
+.verdict.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.verdict.bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.noselect{user-select:none;-webkit-user-select:none}
+@media (prefers-reduced-motion:no-preference){.opt{transition:border-color .12s,background .12s}}
+</style>
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+
+
+<!-- ================= ENTRADA ================= -->
+<main id="scLogin" class="wrap">
+  <div class="eyebrow">UFCD Robótica I · EPAVE</div>
+  <h1>Teste 2 de avaliação — Robótica I</h1>
+  <p class="muted">23 questões · 50 minutos · 20 valores · slides 1 a 16. Professor: Glauco Barbosa.</p>
+
+  <section class="panel">
+    <h2>Regras</h2>
+    <ul class="rules">
+      <li>O teste corre em <strong>ecrã inteiro</strong>. Não saia da página até entregar.</li>
+      <li>Se sair do ecrã inteiro, mudar de separador ou janela, minimizar o browser ou recarregar a página, <strong>o teste termina de imediato</strong> e é corrigido com as respostas dadas até aí.</li>
+      <li>Só pode fazer o teste uma vez. Copiar, colar e o botão direito estão desativados.</li>
+      <li>Grupo I (V/F): 0,75 valores cada. Grupo II (escolha múltipla): 1 valor cada. Respostas erradas não descontam.</li>
+      <li>No fim, mostre o ecrã de resultado ao professor antes de fechar.</li>
+    </ul>
+  </section>
+
+  <form id="fLogin" class="panel" novalidate>
+    <h2>Identificação</h2>
+    <div class="grid2">
+      <label class="f" for="inNome">Nome completo<input id="inNome" type="text" autocomplete="off" maxlength="80"></label>
+      <label class="f" for="inNum">Número<input id="inNum" type="text" inputmode="numeric" autocomplete="off" maxlength="6"></label>
+      <label class="f" for="inTurma">Turma<input id="inTurma" type="text" autocomplete="off" maxlength="20" placeholder="ex.: 3.º TEAC"></label>
+      <label class="f" for="inCodigo">Código de acesso (dado pelo professor)<input id="inCodigo" type="password" autocomplete="off" maxlength="30"></label>
+    </div>
+    <label class="check" for="inAceito"><input id="inAceito" type="checkbox"> Li as regras e sei que sair da página termina o teste.</label>
+    <p id="loginErr" class="err" hidden></p>
+    <div class="row">
+      <button class="btn primary" type="submit">Iniciar teste em ecrã inteiro</button>
+      <span class="spacer"></span>
+      <button class="link" type="button" id="toTeacher">Modo professor</button>
+    </div>
+  </form>
+</main>
+
+<!-- ================= TESTE ================= -->
+<div id="scExam" hidden class="noselect">
+  <div class="bar" role="status">
+    <span class="who" id="barWho"></span>
+    <span class="spacer"></span>
+    <span class="prog" id="barProg"></span>
+    <span class="timer" id="barTimer" aria-label="Tempo restante">50:00</span>
+  </div>
+  <main class="wrap">
+    <section class="panel" id="qBox" aria-live="polite"></section>
+    <div class="row">
+      <button class="btn" type="button" id="bPrev">← Anterior</button>
+      <button class="btn" type="button" id="bNext">Seguinte →</button>
+      <span class="spacer"></span>
+      <button class="btn primary" type="button" id="bSubmit">Entregar teste</button>
+    </div>
+    <div class="panel">
+      <span class="navlabel">Questões (as respondidas aparecem preenchidas)</span>
+      <div class="nav" id="navGrid"></div>
+    </div>
+  </main>
+  <div class="overlay" id="ovConfirm" hidden>
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="cTitle">
+      <h2 id="cTitle">Entregar o teste?</h2>
+      <p id="cText"></p>
+      <div class="row"><button class="btn" type="button" id="cNo">Continuar a responder</button><button class="btn primary" type="button" id="cYes">Entregar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RESULTADO ================= -->
+<main id="scResult" class="wrap" hidden>
+  <div class="eyebrow">Teste 2 Robótica I · resultado</div>
+  <section class="panel">
+    <div><span class="status" id="rStatus"></span></div>
+    <div class="score" id="rScore"></div>
+    <p id="rReason" class="muted"></p>
+    <dl class="kv">
+      <dt>Nome</dt><dd id="rNome"></dd>
+      <dt>Número</dt><dd id="rNum"></dd>
+      <dt>Turma</dt><dd id="rTurma"></dd>
+      <dt>Respondidas</dt><dd id="rResp"></dd>
+      <dt>Início</dt><dd id="rIni"></dd>
+      <dt>Fim</dt><dd id="rFim"></dd>
+    </dl>
+    <div>
+      <div class="muted">Código de verificação</div>
+      <div class="code" id="rCode"></div>
+    </div>
+    <p class="muted">Mostre este ecrã ao professor. Não feche a página antes de ele registar a nota e o código.</p>
+  </section>
+</main>
+
+<!-- ================= PROFESSOR ================= -->
+<main id="scTeacher" class="wrap" hidden>
+  <div class="eyebrow">Modo professor</div>
+  <h1>Verificar resultados</h1>
+  <form id="fPin" class="panel" novalidate>
+    <label class="f" for="inPin">PIN do professor<input id="inPin" type="password" autocomplete="off" maxlength="20"></label>
+    <p id="pinErr" class="err" hidden>PIN incorreto.</p>
+    <div class="row"><button class="btn primary" type="submit">Entrar</button><button class="btn" type="button" id="tBack1">Voltar</button></div>
+  </form>
+  <div id="tArea" hidden style="display:contents">
+    <form id="fVerify" class="panel" novalidate>
+      <h2>Confirmar um resultado</h2>
+      <p class="muted">Copie os dados do ecrã do aluno. Se o código bater certo, a nota não foi alterada.</p>
+      <div class="grid2">
+        <label class="f" for="vNome">Nome<input id="vNome" type="text" autocomplete="off"></label>
+        <label class="f" for="vNum">Número<input id="vNum" type="text" autocomplete="off"></label>
+        <label class="f" for="vTurma">Turma<input id="vTurma" type="text" autocomplete="off"></label>
+        <label class="f" for="vNota">Nota (ex.: 14,75)<input id="vNota" type="text" autocomplete="off"></label>
+        <label class="f" for="vEstado">Estado<select id="vEstado"><option value="C">Concluído</option><option value="T">Terminado por saída</option></select></label>
+        <label class="f" for="vCode">Código de verificação<input id="vCode" type="text" autocomplete="off" maxlength="8"></label>
+      </div>
+      <div class="row"><button class="btn primary" type="submit">Verificar</button></div>
+      <p id="vOut" class="verdict" hidden></p>
+    </form>
+    <section class="panel">
+      <h2>Este computador</h2>
+      <p class="muted">O bloqueio de "só uma tentativa" fica guardado no browser de cada computador. Limpe-o se um aluno precisar de repetir aqui, ou antes de outra turma usar a mesma máquina.</p>
+      <p id="tLocal"></p>
+      <div class="row"><button class="btn danger" type="button" id="tClear">Limpar tentativas deste computador</button><button class="btn" type="button" id="tBack2">Voltar ao início</button></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(()=>{
+/* ====== CONFIGURAÇÃO DO PROFESSOR ====== */
+const CODIGO_ACESSO = "ROBOTICA2";   // código que dá aos alunos no início da aula
+const PIN_PROFESSOR  = "2026";        // PIN do modo professor
+const DURACAO_MIN   = 50;
+const SEGREDO       = "epave-rob2-glauco-K9w";
+
+/* ====== QUESTÕES ====== */
+const VF=[
+ ["Num manipulador série, em regra, o número de graus de liberdade é igual ao número de juntas.",true],
+ ["Uma junta prismática produz um movimento angular em torno de um eixo.",false],
+ ["A carga (payload) indicada pelo fabricante refere-se apenas à massa da peça, sem contar com a garra.",false],
+ ["Em regra, a exatidão de um robô é pior do que a sua repetibilidade, por causa da calibração, das folgas e da flexão dos elos.",true],
+ ["\u201cSoldadura\u201d, \u201cpintura\u201d e \u201cpaletização\u201d são tipos de robôs classificados pela estrutura cinemática.",false],
+ ["\u201cColaborativo\u201d classifica um robô pelo modo de interação com as pessoas, e não pela sua estrutura cinemática.",true],
+ ["O espaço de trabalho de um robô depende da estrutura cinemática e do comprimento dos elos.",true],
+ ["Num robô cilíndrico (RPP), a primeira junta, na base, é prismática.",false],
+ ["No robô Delta, os motores ficam na base, o que torna as partes móveis leves e permite acelerações muito elevadas.",true],
+ ["O robô Delta tem um espaço de trabalho grande e uma capacidade de carga elevada.",false],
+ ["A plataforma de Stewart é um robô paralelo com 6 graus de liberdade.",true],
+ ["Num SCARA, os eixos das duas juntas de rotação são horizontais e paralelos.",false]
+];
+const MC=[
+ ["Um manipulador série tem 5 juntas. O que é que, em geral, NÃO consegue fazer?",["Orientar a ferramenta numa direção qualquer, em qualquer ponto do espaço de trabalho.","Levar a ferramenta a pontos diferentes em x, y e z.","Ter juntas de rotação e prismáticas ao mesmo tempo.","Trabalhar com uma garra de vácuo."]],
+ ["Um robô tem uma rotação na base, uma junta prismática vertical e uma junta prismática radial. Qual é a notação e a forma do espaço de trabalho?",["RPP — cilindro","RRP — porção de esfera","PRP — paralelepípedo","RPP — porção de esfera"]],
+ ["Um SCARA tem de inserir um pino num furo, com um pequeno desalinhamento horizontal. Que característica do SCARA ajuda nesta tarefa?",["É complacente no plano horizontal e rígido na vertical.","É rígido no plano horizontal e complacente na vertical.","Tem 6 GdL e corrige a orientação do pino.","O espaço de trabalho é esférico."]],
+ ["Numa lista de \u201ctipos de robôs\u201d aparecem: SCARA · paletização · colaborativo · Delta. Por que critério está classificado cada um, por esta ordem?",["Estrutura · aplicação · interação com pessoas · estrutura","Estrutura · estrutura · aplicação · aplicação","Aplicação · aplicação · interação com pessoas · estrutura","Estrutura · interação com pessoas · aplicação · estrutura"]],
+ ["Que valor de repetibilidade é mais plausível para um robô industrial de grande porte?",["±0,1 mm","±0,001 mm","±1 mm","±10 mm"]],
+ ["Um robô tem uma carga nominal de 10 kg. A garra pesa 3 kg e cada peça pesa 8 kg. O que se pode concluir?",["Não serve: a carga inclui garra e peça, 11 kg no total, acima dos 10 kg.","Serve, porque a peça (8 kg) é inferior a 10 kg.","Serve, desde que trabalhe mais devagar.","Não serve, porque a garra nunca pode pesar mais de 10 % da carga."]],
+ ["Porque é que um robô Delta consegue acelerações muito superiores às de um robô articulado?",["Os motores estão na base e as partes móveis são muito leves.","Tem 6 graus de liberdade.","É acionado por atuadores hidráulicos.","O seu espaço de trabalho é uma porção de esfera."]],
+ ["Quantos graus de liberdade tem um robô Delta típico?",["3 GdL de translação, com uma rotação opcional.","6 GdL, como a plataforma de Stewart.","3 GdL de orientação, sem translação.","2 GdL no plano horizontal."]],
+ ["O robô esférico e o SCARA têm ambos a notação RRP. O que os distingue?",["No SCARA, os dois eixos de rotação são verticais e paralelos e a prismática é vertical. No esférico, uma rotação é da base, a outra de elevação, e a prismática estende o braço.","Nada: são o mesmo robô com nomes diferentes.","O SCARA tem as juntas de rotação na horizontal e o esférico na vertical.","O esférico tem uma junta prismática vertical e o SCARA uma radial."]],
+ ["Num ensaio, um robô vai 30 vezes ao mesmo ponto. Os pontos atingidos ficam espalhados num círculo com cerca de 2 mm de diâmetro, mas o centro desse círculo coincide com o ponto pedido. Como se classifica o robô?",["Exato (em média), mas pouco repetível","Repetível e pouco exato","Repetível e exato","Nem exato nem repetível"]],
+ ["Um robô cartesiano (PPP) tem cursos de 1,2 m em x, 0,8 m em y e 0,5 m em z. Qual é o volume do seu espaço de trabalho?",["0,48 m³","2,5 m³","0,96 m³","0,24 m³"]]
+]; // em MC, a opção certa é sempre a primeira da lista (índice 0); a ordem é baralhada no ecrã
+
+/* ====== utilitários ====== */
+const $=id=>document.getElementById(id);
+const LS={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},
+          set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+          del(k){try{localStorage.removeItem(k)}catch(e){}},
+          keys(){try{return Object.keys(localStorage)}catch(e){return []}}};
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toUpperCase().replace(/\s+/g," ").trim();
+function fnv(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return h>>>0}
+function code6(nome,num,turma,nota,estado){
+  const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let h=fnv(SEGREDO+"|"+norm(nome)+"|"+norm(num)+"|"+norm(turma)+"|"+nota+"|"+estado),h2=fnv(String(h)+SEGREDO),s="";
+  for(let i=0;i<6;i++){const x=i<3?h:h2;s+=A[(x>>>(i%3*10))%32]}
+  return s;
+}
+function rng(seed){let s=seed||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%1e6)/1e6}}
+function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const fmtNota=n=>n.toFixed(2).replace(".",",");
+const hhmm=t=>new Date(t).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+const show=id=>{for(const s of ["scLogin","scExam","scResult","scTeacher"])$(s).hidden=(s!==id);window.scrollTo(0,0)};
+
+const KEY_ACTIVE="rob2:ativo", KEY_DONE=n=>"rob2:feito:"+norm(n);
+let st=null, armed=false, tick=null;
+const save=()=>{if(st)LS.set(KEY_DONE(st.num),st)};
+
+/* ====== arranque: sessão interrompida? ====== */
+const pend=LS.get(KEY_ACTIVE);
+if(pend){const s=LS.get(KEY_DONE(pend));if(s&&s.status==="ativo"){st=s;terminate("A página foi recarregada ou fechada durante o teste.");}else LS.del(KEY_ACTIVE)}
+
+/* ====== entrada ====== */
+$("fLogin").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const nome=$("inNome").value.trim(),num=$("inNum").value.trim(),turma=$("inTurma").value.trim(),cod=$("inCodigo").value.trim();
+  const err=m=>{$("loginErr").textContent=m;$("loginErr").hidden=false};
+  if(nome.split(/\s+/).length<2)return err("Escreva o nome completo (nome e apelido).");
+  if(!/^\d{1,6}$/.test(num))return err("O número só pode ter algarismos.");
+  if(!turma)return err("Indique a turma.");
+  if(norm(cod)!==norm(CODIGO_ACESSO))return err("Código de acesso errado. Peça-o ao professor.");
+  if(!$("inAceito").checked)return err("Confirme que leu as regras.");
+  const prev=LS.get(KEY_DONE(num));
+  if(prev&&prev.status!=="ativo"){st=prev;return showResult()}
+  $("loginErr").hidden=true;
+
+  let fs=false;
+  try{if(document.documentElement.requestFullscreen){await document.documentElement.requestFullscreen({navigationUI:"hide"});fs=true}}catch(_){}
+  const r=rng(fnv(norm(nome)+num+Date.now()));
+  const items=[...shuffle(VF.map((_,i)=>"v"+i),r),...shuffle(MC.map((_,i)=>"m"+i),r)];
+  const perm={};MC.forEach((_,i)=>perm["m"+i]=shuffle([0,1,2,3],r));
+  st={nome,num,turma,ini:Date.now(),fim:null,items,perm,ans:{},cur:0,status:"ativo",motivo:"",fs};
+  save();LS.set(KEY_ACTIVE,num);
+  startExam();
+});
+$("toTeacher").addEventListener("click",()=>{show("scTeacher");$("fPin").hidden=false;$("tArea").hidden=true;$("inPin").value=""});
+
+/* ====== teste ====== */
+function startExam(){
+  show("scExam");
+  $("barWho").textContent=st.nome+" · n.º "+st.num+" · "+st.turma;
+  buildNav();render();
+  tick=setInterval(updTimer,500);updTimer();
+  armed=false;setTimeout(()=>armed=true,1500);
+}
+function remaining(){return st.ini+DURACAO_MIN*60000-Date.now()}
+function updTimer(){
+  if(!st||st.status!=="ativo")return;
+  const ms=remaining();
+  if(ms<=0){finish("Tempo esgotado: o teste foi entregue automaticamente.");return}
+  const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);
+  $("barTimer").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  $("barTimer").classList.toggle("low",ms<5*60000);
+}
+function label(id){return id[0]==="v"?"I."+(+id.slice(1)+1):"II."+(+id.slice(1)+1)}
+function buildNav(){
+  const g=$("navGrid");g.textContent="";
+  st.items.forEach((id,i)=>{const b=document.createElement("button");b.type="button";b.textContent=i+1;b.setAttribute("aria-label","Questão "+(i+1));b.addEventListener("click",()=>{st.cur=i;save();render()});g.appendChild(b)});
+}
+function render(){
+  const i=st.cur,id=st.items[i],box=$("qBox");box.textContent="";
+  const head=document.createElement("div");head.className="qhead";
+  const n=document.createElement("span");n.className="qnum";n.textContent="Questão "+(i+1)+" de "+st.items.length;
+  const t=document.createElement("span");t.className="tag";t.textContent=id[0]==="v"?"Verdadeiro ou falso · 0,75 val.":"Escolha múltipla · 1 val.";
+  head.append(n,t);box.appendChild(head);
+  const stem=document.createElement("p");stem.className="stem";box.appendChild(stem);
+  const wrap=document.createElement("div");box.appendChild(wrap);
+  const opt=(val,txt,key)=>{
+    const l=document.createElement("label");l.className="opt";const inp=document.createElement("input");
+    inp.type="radio";inp.name="q";inp.id="q_"+id+"_"+val;inp.value=val;inp.checked=st.ans[id]===val;
+    inp.addEventListener("change",()=>{st.ans[id]=val;save();paintNav()});
+    l.htmlFor=inp.id;l.appendChild(inp);
+    if(key){const k=document.createElement("span");k.className="k";k.textContent=key;l.appendChild(k)}
+    const s=document.createElement("span");s.textContent=txt;l.appendChild(s);wrap.appendChild(l);
+  };
+  if(id[0]==="v"){stem.textContent=VF[+id.slice(1)][0];wrap.className="vf";opt("V","Verdadeiro");opt("F","Falso")}
+  else{const q=MC[+id.slice(1)];stem.textContent=q[0];wrap.className="opts";
+       st.perm[id].forEach((o,j)=>opt(String(o),q[1][o],"ABCD"[j]+"."))}
+  $("bPrev").disabled=i===0;$("bNext").disabled=i===st.items.length-1;
+  paintNav();
+}
+function paintNav(){
+  const bs=$("navGrid").children;
+  st.items.forEach((id,i)=>{bs[i].classList.toggle("done",id in st.ans);bs[i].classList.toggle("cur",i===st.cur)});
+  $("barProg").textContent=Object.keys(st.ans).length+"/"+st.items.length+" respondidas";
+}
+$("bPrev").addEventListener("click",()=>{if(st.cur>0){st.cur--;save();render()}});
+$("bNext").addEventListener("click",()=>{if(st.cur<st.items.length-1){st.cur++;save();render()}});
+$("bSubmit").addEventListener("click",()=>{
+  const f=st.items.length-Object.keys(st.ans).length;
+  $("cText").textContent=f?"Tem "+f+" questão(ões) por responder. Depois de entregar não pode alterar nada.":"Respondeu a todas as questões. Depois de entregar não pode alterar nada.";
+  $("ovConfirm").hidden=false;$("cNo").focus();
+});
+$("cNo").addEventListener("click",()=>$("ovConfirm").hidden=true);
+$("cYes").addEventListener("click",()=>finish("Teste entregue pelo aluno."));
+
+/* ====== vigilância ====== */
+function guard(reason){if(st&&st.status==="ativo"&&armed)terminate(reason)}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)guard("Mudou de separador, minimizou ou bloqueou o ecrã.")});
+window.addEventListener("blur",()=>guard("Saiu da janela do teste."));
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&st&&st.fs)guard("Saiu do ecrã inteiro.")});
+window.addEventListener("beforeunload",e=>{if(st&&st.status==="ativo"){e.preventDefault();e.returnValue=""}});
+for(const ev of ["copy","cut","paste","contextmenu","dragstart"])document.addEventListener(ev,e=>{if(st&&st.status==="ativo")e.preventDefault()});
+
+/* ====== fim ====== */
+function grade(){let n=0;for(const id in st.ans){if(id[0]==="v"){if((st.ans[id]==="V")===VF[+id.slice(1)][1])n+=0.75}else if(st.ans[id]==="0")n+=1}return Math.round(n*100)/100}
+function close(status,motivo){
+  st.status=status;st.motivo=motivo;st.fim=Date.now();st.nota=grade();save();LS.del(KEY_ACTIVE);
+  clearInterval(tick);$("ovConfirm").hidden=true;
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+  showResult();
+}
+function finish(m){if(st.status==="ativo")close("concluido",m)}
+function terminate(m){if(st.status==="ativo")close("terminado",m)}
+function showResult(){
+  show("scResult");
+  const ok=st.status==="concluido";
+  $("rStatus").textContent=ok?"Concluído":"Terminado por saída da página";
+  $("rStatus").className="status "+(ok?"ok":"bad");
+  $("rScore").innerHTML="";$("rScore").append(fmtNota(st.nota));const sm=document.createElement("small");sm.textContent=" / 20";$("rScore").appendChild(sm);
+  $("rReason").textContent=st.motivo+(st.fs?"":" (Este dispositivo não permitiu o ecrã inteiro.)");
+  $("rNome").textContent=st.nome;$("rNum").textContent=st.num;$("rTurma").textContent=st.turma;
+  $("rResp").textContent=Object.keys(st.ans).length+" de "+st.items.length;
+  $("rIni").textContent=hhmm(st.ini);$("rFim").textContent=hhmm(st.fim);
+  $("rCode").textContent=code6(st.nome,st.num,st.turma,fmtNota(st.nota),ok?"C":"T");
+}
+
+/* ====== professor ====== */
+$("fPin").addEventListener("submit",e=>{e.preventDefault();
+  if($("inPin").value===PIN_PROFESSOR){$("fPin").hidden=true;$("tArea").hidden=false;$("tArea").style.display="contents";listLocal()}
+  else $("pinErr").hidden=false});
+$("fVerify").addEventListener("submit",e=>{e.preventDefault();
+  let nota=$("vNota").value.trim().replace(".",",");if(/^\d+(,\d+)?$/.test(nota))nota=fmtNota(parseFloat(nota.replace(",",".")));
+  const good=code6($("vNome").value,$("vNum").value,$("vTurma").value,nota,$("vEstado").value)===norm($("vCode").value).replace(/\s/g,"");
+  const o=$("vOut");o.hidden=false;o.className="verdict "+(good?"ok":"bad");
+  o.textContent=good?"Código válido: os dados e a nota correspondem ao teste.":"Código não corresponde. Confira nome, número, turma, nota e estado exatamente como aparecem no ecrã do aluno."});
+function listLocal(){const k=LS.keys().filter(k=>k.startsWith("rob2:feito:"));$("tLocal").textContent=k.length?k.length+" tentativa(s) guardada(s) neste browser: n.º "+k.map(x=>x.slice(11)).join(", ")+".":"Nenhuma tentativa guardada neste browser."}
+$("tClear").addEventListener("click",()=>{LS.keys().filter(k=>k.startsWith("rob2:")).forEach(LS.del);listLocal()});
+const back=()=>{$("tArea").hidden=true;$("tArea").style.display="";show("scLogin")};
+$("tBack1").addEventListener("click",back);$("tBack2").addEventListener("click",back);
+})();
+</script>
+
+</body>
+</html>
+
+</body></html>
